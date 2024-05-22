@@ -22,14 +22,14 @@ def create_user():
     if request.method == "POST":
         name = request.form["name"]
         last_name = request.form["last_name"]
-        username = request.form["username"]
+        name = request.form["name"]
         password = request.form["password"]
         role = request.form["role"]
-        existing_user = User.query.filter_by(username=username).first()
+        existing_user = User.query.filter_by(name=name).first()
         if existing_user:
             flash("El nombre de usuario ya está en uso", "error")
             return redirect(url_for("user.create_user"))
-        user = User(name, last_name, username, password, role=role)
+        user = User(name, last_name, name, password, role=role)
         user.set_password(password)
         user.save()
         flash("Usuario registrado exitosamente", "success")
@@ -67,9 +67,9 @@ def delete_user(id):
 @user_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        username = request.form["username"]
+        name = request.form["name"]
         password = request.form["password"]
-        user = User.get_user_by_username(username)
+        user = User.get_user_by_username(name)
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
             flash("Inicio de sesión exitoso", "success")
